@@ -10,28 +10,28 @@ locals {
   cluster_node_service_account_name = "${var.cluster_name}-node"
 
   cluster_node_group_configs = {
-    service = {
-      name = "service"
-      cpu = 2
-      memory = 4
-      disk = {
-        size = 64
-        type = "network-ssd"
-      }
-    }
-    nfs = {
-      name = "nfs"
-      cpu = 2
-      memory = 2
-      disk = {
-        size = 64
-        type = "network-ssd"
-      }
-    }
+#    service = {
+#      name = "service"
+#      cpu = 4
+#      memory = 8
+#      disk = {
+#        size = 64
+#        type = "network-ssd"
+#      }
+#    }
+#    nfs = {
+#      name = "nfs"
+#      cpu = 2
+#      memory = 2
+#      disk = {
+#        size = 64
+#        type = "network-ssd"
+#      }
+#    }
     web = {
       name = "web"
-      cpu = 2
-      memory = 4
+      cpu = 4
+      memory = 8
       disk = {
         size = 64
         type = "network-ssd"
@@ -55,7 +55,7 @@ locals {
 
 module "vpc" {
   source = "./modules/vpc"
-  zones = ["ru-central1-a"]
+  zones = var.yandex_zones
   subnet = "10.0.0.0/14"
   name = var.cluster_name
 }
@@ -67,6 +67,19 @@ module "iam" {
   cluster_service_account_name = local.cluster_service_account_name
   cluster_node_service_account_name = local.cluster_node_service_account_name
 }
+
+module "jenkins" {
+  source = "./modules/jenkins"
+  ssh_keys = module.admins.ssh_keys
+  app_disk_image = var.jenkins_image_id
+  cpu_count = 2
+  ram_size = 4
+  cpu_usage = 100
+  instance_name = "jenkins"
+  subnet_id = var.jenkins_subnet_id
+  zone = var.yandex_zones[0]
+}
+
 
 module "cluster" {
   source = "./modules/cluster"

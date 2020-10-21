@@ -7,12 +7,15 @@ variable "yandex_cloud_id" {
 variable "yandex_folder_id" {
   type = string
 }
+variable "yandex_zones" {
+  type = list(string)
+}
 variable "cluster_name" {
   type = string
 }
 variable "cluster_version" {
   type = string
-  default = "1.15"
+  default = "1.16"
 }
 variable "cluster_release_channel" {
   type = string
@@ -34,6 +37,12 @@ variable "node_groups_scale" {
       }
     }
   }
+}
+variable "jenkins_image_id" {
+  type = string
+}
+variable "jenkins_subnet_id" {
+  type = string
 }
 variable "admin_email" {
   type = string

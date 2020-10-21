@@ -1,22 +1,26 @@
 yandex_token = ""
 yandex_cloud_id = ""
 yandex_folder_id = ""
-cluster_name = "example"
-cluster_domain = "example.com"
+yandex_zones = ["ru-central1-a"]
+cluster_name = "otus-cluster"
+cluster_domain = "otus-cluster.10.10.10.10.nio.io"
+cluster_version = "1.16"
 node_groups_scale = {
   service = {
-    fixed_scale = 3
+    fixed_scale = 1
   }
   nfs = {
     fixed_scale = 1
   }
   web = {
-    fixed_scale = 3
+    fixed_scale = 1
   }
 }
-admin_email = "admin@example.com"
+jenkins_image_id = ""
+jenkins_subnet_id = ""
+admin_email = "qq@qq.qq"
 admins = {
-  adminname = {
-    public_keys = ["ssh-rsa XXXXXXX"]
+  appuser = {
+    public_keys = ["ssh-rsa ..."]
   }
 }
