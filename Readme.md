@@ -1,6 +1,16 @@
 # Разворачивание инфраструктуры
 
 ## terrafrom - разворачивание необходимой инфраструктуры в YC
-- В каталоге terrafrom запустить terraform apply для разворачивания кластера, terrafrom destroy для удаления
-- Ingress удаляется долго, хз, обратить внимание на зависимость модуля ingress от node_groups - иначе удаление происходит коряво, ноду умирают раньше чем ingress
-- Набор yml переработан и основан на https://github.com/claustrophobia-com/yandex-cloud-kubernetes
+- на текущей момент разворачивается k8s, ingress, jenkins
+- В каталоге terraform запустить terraform apply для разворачивания кластера, terrafrom destroy для удаления
+- На текущий момент при запуске jenkins - следовать его инструкциям по донастройке
+- Ingress удаляется долго, обратить внимание на зависимость модуля ingress от node_groups - иначе удаление происходит криво, ноды умирают раньше чем ingress
+- Набор yml переработан/обновлен и основан на https://github.com/claustrophobia-com/yandex-cloud-kubernetes
+
+## todo
+
+- добавить разворачивание prometheus, grafana в terraform (или еще как-то :))
+- попробовать автоматизироть преднастройку jenkins или вывод или задание админского пароля
+- опционально добавить в jenkins kubernetes agent
+- опционально подчистить код из claustrophobia
+- актуализировать описание
