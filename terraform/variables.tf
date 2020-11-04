@@ -38,11 +38,10 @@ variable "node_groups_scale" {
     }
   }
 }
-variable "jenkins_image_id" {
-  type = string
-}
 variable "jenkins_subnet_id" {
   type = string
+}
+variable "private_key_path" {
 }
 variable "admin_email" {
   type = string

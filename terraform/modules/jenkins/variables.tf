@@ -1,8 +1,8 @@
 variable ssh_keys {
   description = "ssh key"
 }
-variable app_disk_image {
-  description = "Disk image for reddit app"
+variable private_key_path {
+  description = "private_key"
 }
 variable subnet_id {
   description = "Subnets for modules"
@@ -21,4 +21,7 @@ variable cpu_usage {
 }
 variable instance_name {
   description = "Instance name"
+}
+variable kubeconfig {
+  description = "Kubeconfig"
 }

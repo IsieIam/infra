@@ -1,3 +1,4 @@
+# провайдер YC
 provider "yandex" {
   token = var.yandex_token
   #service_account_key_file = var.service_account_key_file
@@ -5,6 +6,7 @@ provider "yandex" {
   folder_id = var.yandex_folder_id
 }
 
+# локальные переменные для всех модулей
 locals {
   cluster_service_account_name = "${var.cluster_name}-cluster"
   cluster_node_service_account_name = "${var.cluster_name}-node"
@@ -53,6 +55,7 @@ locals {
   }
 }
 
+# создание подсетей для кластера
 module "vpc" {
   source = "./modules/vpc"
   zones = var.yandex_zones
@@ -60,6 +63,7 @@ module "vpc" {
   name = var.cluster_name
 }
 
+# авторизационная составляющая кластера
 module "iam" {
   source = "./modules/iam"
 
@@ -68,16 +72,21 @@ module "iam" {
   cluster_node_service_account_name = local.cluster_node_service_account_name
 }
 
+# Разворачивание дженка
 module "jenkins" {
   source = "./modules/jenkins"
   ssh_keys = module.admins.ssh_keys
-  app_disk_image = var.jenkins_image_id
   cpu_count = 2
   ram_size = 4
   cpu_usage = 100
   instance_name = "jenkins"
   subnet_id = var.jenkins_subnet_id
   zone = var.yandex_zones[0]
+  private_key_path = var.private_key_path
+  # закидываем в jenk конфиг кубер кластера
+  kubeconfig = module.admins.kubeconfigs
+  # выставляем явно зависимость от модуля кластера и его node группы, чтобы kubeconfig уже существовал
+  depends_on = [module.cluster.node_group_ids]
 }
 
 
@@ -99,6 +108,7 @@ module "cluster" {
   ]
 }
 
+# провайдер helm 
 provider "helm" {
   kubernetes {
     load_config_file = false
@@ -119,6 +129,7 @@ provider "helm" {
   }
 }
 
+# провайдер кубера для создания ресурсов типа namespace и прочего
 provider "kubernetes" {
   load_config_file = false
 
@@ -137,10 +148,19 @@ provider "kubernetes" {
   }
 }
 
+# модуль ингресса
 module "nginx-ingress" {
   source = "./modules/nginx-ingress"
-
+  # выбираем на каких нодах его разместить - изначально в репе клаустрафобии - человек делил ноды по сервисам
   node_selector = local.node_selectors["web"]
+  # для корректого создания и удаления ingress необходимо залинковать его на создание node группы
+  depends_on = [module.cluster.node_group_ids]
+}
+
+module "grafana" {
+  source = "./modules/grafana"
+  grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+  prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   depends_on = [module.cluster.node_group_ids]
 }
 

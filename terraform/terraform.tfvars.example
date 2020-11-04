@@ -3,7 +3,7 @@ yandex_cloud_id = ""
 yandex_folder_id = ""
 yandex_zones = ["ru-central1-a"]
 cluster_name = "otus-cluster"
-cluster_domain = "otus-cluster.10.10.10.10.nio.io"
+cluster_domain = "nip.io"
 cluster_version = "1.16"
 node_groups_scale = {
   service = {
@@ -16,11 +16,11 @@ node_groups_scale = {
     fixed_scale = 1
   }
 }
-jenkins_image_id = ""
 jenkins_subnet_id = ""
+private_key_path = "~/.ssh/appuser"
 admin_email = "qq@qq.qq"
 admins = {
   appuser = {
-    public_keys = ["ssh-rsa ..."]
+    public_keys = ["ssh-rsa AAAAB***="]
   }
 }
