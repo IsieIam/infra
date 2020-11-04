@@ -13,7 +13,6 @@ resource "kubernetes_secret" "grafana-secret" {
     "admin-user" = "admin"
     "admin-password" = random_string.grafana-password.result
   }
-
   type = "Opaque"
 }
 
@@ -22,8 +21,10 @@ resource "random_string" "grafana-password" {
   special = false
 }
 
+# переменные для helm чартов прома и графаны
 locals {
   values = {
+    # переменные для графаны
     grafana = {
       ingress = {
         enabled = true
@@ -32,7 +33,57 @@ locals {
       admin = {
         existingSecret = kubernetes_secret.grafana-secret.metadata[0].name
       }
+      # инициализация datasource
+      datasources = {
+        "datasources.yaml" = {
+          apiVersion = 1
+          datasources = [
+            {
+              name = "Prometheus"
+              type = "prometheus"
+              url = "http://prometheus-server"
+              access = "proxy"
+              isDefault = "true"
+            }
+          ]
+        }
+      }
+      # инициализация provider для dashboards
+      dashboardProviders = {
+        "dashboardproviders.yaml" = {
+          apiVersion = 1
+          providers = [
+            {
+              name = "default"
+              orgId = 1
+              folder = ""
+              type = "file"
+              disableDeletion = false
+              editable = true
+              options = {
+                path = "/var/lib/grafana/dashboards"
+              }
+            }
+          ]
+        }
+      }
+      # добавляем пару стандартных дашбордов кубера и прома
+      dashboards = {
+        default = [
+          {
+            gnetId = 6663
+            revision = 1
+            datasource = "Prometheus"
+          },
+          {
+            gnetId = 2
+            revision = 1
+            datasource = "Prometheus"
+          }
+        ]
+      }
     }
+    # переменные для прометея
     prometheus = {
       alertmanager = {
         enabled = false

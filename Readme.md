@@ -28,7 +28,7 @@
 - vpc - разворачивания подсетей под кластер в YC
 - jenkins - jenkins :)
 - nginx-ingress - модуль разворачивания ingress (используется provider helm для terraform)
-- grafana - модуль для разворачивания grafana и prometheus (используется provider helm для terraform)
+- grafana - модуль для разворачивания grafana и prometheus (используется provider helm для terraform). Для графаны в основном файле модуля настраивается datasource прома и добавляются пара стандартных dashboards для k8s и prometheus
 - admins - вспомогательный модуль для учетных данных (его описание смотри в репе клаустрафобии)
 
 
