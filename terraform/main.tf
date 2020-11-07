@@ -190,6 +190,15 @@ module "admins" {
   cluster_endpoint = module.cluster.external_v4_endpoint
 }
 
+
+resource "kubernetes_namespace" "aznamespace" {
+  metadata {
+    name = "aznamespace"
+  }
+  #depends_on = [module.cluster.node_group_ids]
+}
+
+
 provider "local" {}
 
 provider "random" {}
