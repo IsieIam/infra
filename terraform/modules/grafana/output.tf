@@ -7,3 +7,6 @@ output "grafana_hostname" {
 output "prometheus_hostname" {
   value = var.prometheus_hostname
 }
+output "alertmanager_hostname" {
+  value = var.alertmanager_hostname
+}

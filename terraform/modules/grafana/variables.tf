@@ -4,3 +4,6 @@ variable "grafana_hostname" {
 variable "prometheus_hostname" {
   type = string
 }
+variable "alertmanager_hostname" {
+  type = string
+}

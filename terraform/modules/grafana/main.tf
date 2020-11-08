@@ -85,9 +85,18 @@ locals {
     }
     # переменные для прометея
     prometheus = {
+      # базовые параметры деплоя алертменеджера
       alertmanager = {
-        enabled = false
+        enabled = true
+        ingress = {
+          enabled = true
+          hosts = [var.alertmanager_hostname]
+        }
+        persistentVolume = {
+          enabled = false
+        }
       }
+      # базовые параметры деплоя сервера прометея
       server = {
         ingress = {
           enabled = true
@@ -95,6 +104,55 @@ locals {
         }
         persistentVolume = {
           enabled = false
+        }
+      }
+      # кастомизация настроек алертменеджера
+      alertmanagerFiles = {
+        "alertmanager.yml" = {
+          global = {
+            slack_api_url = ""
+          }
+          receivers = [
+            {
+              name = "default-receiver"
+              slack_configs = [
+                {
+                  channel = ""
+                  send_resolved = true
+                },
+              ]
+            },
+          ]
+          route = {
+            group_wait = "10s"
+            group_interval = "5m"
+            receiver = "default-receiver"
+            repeat_interval = "3h"
+          }
+        }
+      }
+      # кастомизация настроек самого прометея
+      serverFiles = {
+        "alerting_rules.yml" = {
+          groups = [
+            {
+              name = "Instances"
+              rules = [
+                {
+                  alert = "InstanceDown"
+                  expr = "up == 0"
+                  for = "1m"
+                  labels = {
+                    severity = "page"
+                  }
+                  annotations = {
+                    description = "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
+                    summary = "Instance {{ $labels.instance }} down"
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     }

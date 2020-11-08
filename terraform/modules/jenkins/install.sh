@@ -5,9 +5,6 @@ while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 
    sleep 1
 done
 
-# ставим докер и git
-sudo apt-get -y install docker.io git
-
 # ставим gitversion
 wget https://github.com/GitTools/GitVersion/releases/download/5.3.7/gitversion-ubuntu.18.04-x64-5.3.7.tar.gz
 tar -xvf gitversion-ubuntu.18.04-x64-5.3.7.tar.gz
@@ -21,6 +18,12 @@ sudo apt-get update
 
 sudo apt-get -y install openjdk-8-jdk
 sudo apt-get -y install jenkins
+
+# ставим  git
+sudo apt-get -y install git
+
+# ставим  docker
+sudo apt-get -y install docker.io
 
 # стаим kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl

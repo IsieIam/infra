@@ -18,3 +18,7 @@ output "prometheus-hostname" {
   value = module.grafana.prometheus_hostname
   description = "Prometheus hostname"
 }
+output "alertmanager-hostname" {
+  value = module.grafana.alertmanager_hostname
+  description = "Prometheus hostname"
+}

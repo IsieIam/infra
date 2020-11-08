@@ -161,6 +161,7 @@ module "grafana" {
   source = "./modules/grafana"
   grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+  alertmanager_hostname = "alertmanager.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   depends_on = [module.cluster.node_group_ids]
 }
 
