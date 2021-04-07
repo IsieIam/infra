@@ -12,12 +12,19 @@ sudo chmod +x ./gitversion
 sudo mv gitversion /usr/local/bin
 
 # ставим сам дженк и яву для него
+echo "Install Jenkins: add repo"
 wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
 sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
-
+# Ждем освобожение apt
+while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
+   sleep 1
+done
+echo "Install OpenJDK"
 sudo apt-get -y install openjdk-8-jdk
+echo "Install Jenkins"
 sudo apt-get -y install jenkins
+echo "Install Jenkins: done"
 
 # ставим  git
 sudo apt-get -y install git

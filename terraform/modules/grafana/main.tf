@@ -107,30 +107,30 @@ locals {
         }
       }
       # кастомизация настроек алертменеджера
-      alertmanagerFiles = {
-        "alertmanager.yml" = {
-          global = {
-            slack_api_url = ""
-          }
-          receivers = [
-            {
-              name = "default-receiver"
-              slack_configs = [
-                {
-                  channel = ""
-                  send_resolved = true
-                },
-              ]
-            },
-          ]
-          route = {
-            group_wait = "10s"
-            group_interval = "5m"
-            receiver = "default-receiver"
-            repeat_interval = "3h"
-          }
-        }
-      }
+#      alertmanagerFiles = {
+#        "alertmanager.yml" = {
+#          global = {
+#            slack_api_url = ""
+#          }
+#          receivers = [
+#            {
+#              name = "default-receiver"
+#              slack_configs = [
+#                {
+#                  channel = ""
+#                  send_resolved = true
+#                },
+#              ]
+#            },
+#          ]
+#          route = {
+#            group_wait = "10s"
+#            group_interval = "5m"
+#            receiver = "default-receiver"
+#            repeat_interval = "3h"
+#          }
+#        }
+#      }
       # кастомизация настроек самого прометея
       serverFiles = {
         "alerting_rules.yml" = {
