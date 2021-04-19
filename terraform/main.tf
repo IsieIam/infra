@@ -18,7 +18,7 @@ locals {
 #      memory = 8
 #      disk = {
 #        size = 64
-#        type = "network-ssd"
+#        type = "network-hdd"
 #      }
 #    }
 #    nfs = {
@@ -36,7 +36,7 @@ locals {
       memory = 8
       disk = {
         size = 64
-        type = "network-ssd"
+        type = "network-hdd"
       }
     }
   }
@@ -157,11 +157,25 @@ module "nginx-ingress" {
   depends_on = [module.cluster.node_group_ids]
 }
 
-module "grafana" {
-  source = "./modules/grafana"
+#module "grafana" {
+#  source = "./modules/grafana"
+#  grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+#  prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+#  alertmanager_hostname = "alertmanager.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+#  depends_on = [module.cluster.node_group_ids]
+#}
+
+module "prometheus" {
+  source = "./modules/prometheus"
   grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   alertmanager_hostname = "alertmanager.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+  depends_on = [module.cluster.node_group_ids]
+}
+
+module "elasticsearch" {
+  source = "./modules/elk"
+  kibana_hostname = "kibana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   depends_on = [module.cluster.node_group_ids]
 }
 
@@ -191,12 +205,23 @@ module "admins" {
   cluster_endpoint = module.cluster.external_v4_endpoint
 }
 
-
 resource "kubernetes_namespace" "aznamespace" {
   metadata {
     name = "aznamespace"
   }
   #depends_on = [module.cluster.node_group_ids]
+}
+
+resource "kubernetes_namespace" "stage" {
+  metadata {
+    name = "stage"
+  }
+}
+
+resource "kubernetes_namespace" "prod" {
+  metadata {
+    name = "prod"
+  }
 }
 
 
