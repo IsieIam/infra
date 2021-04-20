@@ -46,6 +46,13 @@ resource "helm_release" "kibana" {
   values = [yamlencode(local.values.kibana)]
 }
 
+resource "helm_release" "filebeat" {
+  repository = "https://helm.elastic.co"
+  name = "filebeat"
+  chart = "filebeat"
+  namespace = kubernetes_namespace.observability.metadata[0].name
+}
+
 #resource "helm_release" "fluent-bit" {
 #  repository = "https://fluent.github.io/helm-charts"
 #  name = "fluent-bit"
@@ -53,9 +60,10 @@ resource "helm_release" "kibana" {
 #  namespace = kubernetes_namespace.observability.metadata[0].name
 #}
 
-resource "helm_release" "fluentd" {
-  repository = "https://fluent.github.io/helm-charts"
-  name = "fluentd"
-  chart = "fluentd"
-  namespace = kubernetes_namespace.observability.metadata[0].name
-}
+
+#resource "helm_release" "fluentd" {
+#  repository = "https://fluent.github.io/helm-charts"
+#  name = "fluentd"
+#  chart = "fluentd"
+#  namespace = kubernetes_namespace.observability.metadata[0].name
+#}
