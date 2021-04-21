@@ -19,6 +19,12 @@ locals {
         hosts = [var.grafana_hostname]
       }
       adminPassword: random_string.grafana-password.result
+      sidecar = {
+        dashboards = {
+          enabled = true
+          label = "grafana_dashboard"
+        }
+      }
     }
     # переменные для прометея
     prometheus = {
@@ -28,6 +34,14 @@ locals {
       }
       prometheusSpec = {
         serviceMonitorSelectorNilUsesHelmValues = false
+      }
+    }
+    # переменные для alertmanager
+    alertmanager = {
+      enabled = true
+      ingress = {
+        enabled = true
+        hosts = [var.alertmanager_hostname]
       }
     }
   }
