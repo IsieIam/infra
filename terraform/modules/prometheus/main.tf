@@ -12,6 +12,25 @@ resource "random_string" "grafana-password" {
 # переменные для helm чартов прома и графаны
 locals {
   values = {
+    additionalPrometheusRulesMap = {
+      rule-name = {
+        groups = [
+          {
+            name = "Nginx status",
+            rules = [
+              {
+                alert = "Nginx DOWN",
+                expr = "nginx_up == 0",
+                for = "10s",
+                labels = {
+                  severity = "warning"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
     # переменные для графаны
     grafana = {
       ingress = {
@@ -43,6 +62,48 @@ locals {
         enabled = true
         hosts = [var.alertmanager_hostname]
       }
+      config = {
+        global = {
+          #slack_api_url: "https://hooks.slack.com/services/fake/fake/fake"
+          resolve_timeout: 30s
+        }
+        route = {
+          routes = [
+            {
+              match = {
+                alertname = "Watchdog"
+              }
+              receiver = "null"
+            },
+            {
+              match = {
+                severity = "warning"
+              }
+              receiver = "slack-notifications"
+            },
+            {
+              match = {
+                severity = "critical"
+              }
+              receiver = "slack-notifications"
+            }
+          ]
+        }
+        receivers = [
+          {
+            name = "null"
+          },
+          {
+            name = "slack-notifications"
+            slack_configs = [
+              {
+                channel = "#test",
+                send_resolved = true
+              },
+            ]
+          }
+        ]
+      }
     }
   }
 }
@@ -51,15 +112,8 @@ resource "helm_release" "prometheus" {
   repository = "https://prometheus-community.github.io/helm-charts"
   name = "prometheus"
   chart = "kube-prometheus-stack"
+  version    = "14.9.0"
   namespace = kubernetes_namespace.monitoring.metadata[0].name
 
   values = [yamlencode(local.values)]
 }
-
-#data "kubernetes_service" "prometheus" {
-#  depends_on = [helm_release.prometheus]
-#  metadata {
-#    name = helm_release.prometheus.name
-#    namespace = kubernetes_namespace.monitoring.metadata[0].name
-#  }
-#}

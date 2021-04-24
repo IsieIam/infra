@@ -170,13 +170,19 @@ module "prometheus" {
   grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   alertmanager_hostname = "alertmanager.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
-  depends_on = [module.cluster.node_group_ids]
+  depends_on = [
+    module.cluster.node_group_ids,
+    module.nginx-ingress
+  ]
 }
 
 module "elasticsearch" {
   source = "./modules/elk"
   kibana_hostname = "kibana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
-  depends_on = [module.cluster.node_group_ids]
+  depends_on = [
+    module.cluster.node_group_ids,
+    module.nginx-ingress
+  ]
 }
 
 provider "kubectl" {
