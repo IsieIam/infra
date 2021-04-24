@@ -64,8 +64,8 @@ locals {
       }
       config = {
         global = {
-          #slack_api_url: "https://hooks.slack.com/services/fake/fake/fake"
-          resolve_timeout: 30s
+          slack_api_url = "https://hooks.slack.com/services/fake/fake/fake",
+          resolve_timeout = "30s"
         }
         route = {
           routes = [
