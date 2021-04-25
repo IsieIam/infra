@@ -1,3 +1,13 @@
+terraform {
+  backend "remote" {
+    organization = "IsieIam"
+
+    workspaces {
+      name = "cli-run"
+    }
+  }
+}
+
 # провайдер YC
 provider "yandex" {
   token = var.yandex_token
