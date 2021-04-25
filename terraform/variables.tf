@@ -58,3 +58,7 @@ variable "output_dir" {
   type = string
   default = "output"
 }
+
+variable "slack_api_url" {
+  type = string
+}

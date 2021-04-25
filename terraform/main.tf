@@ -170,6 +170,7 @@ module "prometheus" {
   grafana_hostname = "grafana.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   prometheus_hostname = "prometheus.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
   alertmanager_hostname = "alertmanager.${module.nginx-ingress.load_balancer_ip}.${var.cluster_domain}"
+  alertmanager_slack_api_url = var.slack_api_url
   depends_on = [
     module.cluster.node_group_ids,
     module.nginx-ingress

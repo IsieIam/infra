@@ -7,3 +7,6 @@ variable "prometheus_hostname" {
 variable "alertmanager_hostname" {
   type = string
 }
+variable "alertmanager_slack_api_url" {
+  type = string
+}

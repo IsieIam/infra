@@ -24,3 +24,5 @@ admins = {
     public_keys = ["ssh-rsa AAAAB***="]
   }
 }
+
+slack_api_url = "https://hooks.slack.com/services/fake/fake/fake"
