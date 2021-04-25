@@ -17,11 +17,11 @@ jobs:
 
       - name: install yc
         run: |-
-          ls -la  /home/runner
+          ls -la  /home/runner/yandex-cloud
 
       - name: add yc
         run: |-
-          source "/home/runner/.bashrc"
+          sudo cp /home/runner/yandex-cloud/bin/yc /usr/local/bin/yc
 
       - name: check yc
         run: |-
