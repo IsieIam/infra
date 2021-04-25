@@ -16,6 +16,9 @@ provider "yandex" {
   folder_id = var.yandex_folder_id
 }
 
+
+data "yandex_client_config" "client" {}
+
 # локальные переменные для всех модулей
 locals {
   cluster_service_account_name = "${var.cluster_name}-cluster"
@@ -121,41 +124,15 @@ module "cluster" {
 # провайдер helm 
 provider "helm" {
   kubernetes {
-    load_config_file = false
-
-    host = module.cluster.external_v4_endpoint
-    cluster_ca_certificate = module.cluster.ca_certificate
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command = "yc"
-      args = [
-        "managed-kubernetes",
-        "create-token",
-        "--cloud-id", var.yandex_cloud_id,
-        "--folder-id", var.yandex_folder_id,
-        "--token", var.yandex_token,
-      ]
-    }
+    config_path = "output/kubeconfigs/appuser.yaml"
   }
 }
 
+
+
 # провайдер кубера для создания ресурсов типа namespace и прочего
 provider "kubernetes" {
-  load_config_file = false
-
-  host = module.cluster.external_v4_endpoint
-  cluster_ca_certificate = module.cluster.ca_certificate
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command = "yc"
-    args = [
-      "managed-kubernetes",
-      "create-token",
-      "--cloud-id", var.yandex_cloud_id,
-      "--folder-id", var.yandex_folder_id,
-      "--token", var.yandex_token,
-    ]
-  }
+  config_path = "output/kubeconfigs/appuser.yaml"
 }
 
 # модуль ингресса
