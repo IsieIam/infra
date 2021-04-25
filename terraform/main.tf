@@ -130,7 +130,7 @@ provider "helm" {
     cluster_ca_certificate = module.cluster.ca_certificate
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
-      command = "/usr/local/bin/yc"
+      command = "yc"
       args = [
         "managed-kubernetes",
         "create-token",
@@ -150,7 +150,7 @@ provider "kubernetes" {
   cluster_ca_certificate = module.cluster.ca_certificate
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    command = "/usr/local/bin/yc"
+    command = "yc"
     args = [
       "managed-kubernetes",
       "create-token",
