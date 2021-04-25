@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: check out the repo
         uses: actions/checkout@v2
+      - run: |-
+        sudo curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -h
 
       - name: setup terraform
         uses: hashicorp/setup-terraform@v1

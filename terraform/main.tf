@@ -124,15 +124,41 @@ module "cluster" {
 # провайдер helm 
 provider "helm" {
   kubernetes {
-    config_path = "output/kubeconfigs/appuser.yaml"
+    load_config_file = false
+
+    host = module.cluster.external_v4_endpoint
+    cluster_ca_certificate = module.cluster.ca_certificate
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command = "yc"
+      args = [
+        "managed-kubernetes",
+        "create-token",
+        "--cloud-id", var.yandex_cloud_id,
+        "--folder-id", var.yandex_folder_id,
+        "--token", var.yandex_token,
+      ]
+    }
   }
 }
 
-
-
 # провайдер кубера для создания ресурсов типа namespace и прочего
 provider "kubernetes" {
-  config_path = "output/kubeconfigs/appuser.yaml"
+  load_config_file = false
+
+  host = module.cluster.external_v4_endpoint
+  cluster_ca_certificate = module.cluster.ca_certificate
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command = "yc"
+    args = [
+      "managed-kubernetes",
+      "create-token",
+      "--cloud-id", var.yandex_cloud_id,
+      "--folder-id", var.yandex_folder_id,
+      "--token", var.yandex_token,
+    ]
+  }
 }
 
 # модуль ингресса
