@@ -83,21 +83,21 @@ module "iam" {
 }
 
 # Разворачивание дженка
-module "jenkins" {
-  source = "./modules/jenkins"
-  ssh_keys = module.admins.ssh_keys
-  cpu_count = 2
-  ram_size = 4
-  cpu_usage = 100
-  instance_name = "jenkins"
-  subnet_id = var.jenkins_subnet_id
-  zone = var.yandex_zones[0]
-  private_key_path = var.private_key_path
-  # закидываем в jenk конфиг кубер кластера
-  kubeconfig = module.admins.kubeconfigs
-  # выставляем явно зависимость от модуля кластера и его node группы, чтобы kubeconfig уже существовал
-  depends_on = [module.cluster.node_group_ids]
-}
+#module "jenkins" {
+#  source = "./modules/jenkins"
+#  ssh_keys = module.admins.ssh_keys
+#  cpu_count = 2
+#  ram_size = 4
+#  cpu_usage = 100
+#  instance_name = "jenkins"
+#  subnet_id = var.jenkins_subnet_id
+#  zone = var.yandex_zones[0]
+#  private_key_path = var.private_key_path
+#  # закидываем в jenk конфиг кубер кластера
+#  kubeconfig = module.admins.kubeconfigs
+#  # выставляем явно зависимость от модуля кластера и его node группы, чтобы kubeconfig уже существовал
+#  depends_on = [module.cluster.node_group_ids]
+#}
 
 
 module "cluster" {
@@ -220,25 +220,6 @@ module "admins" {
   admins = var.admins
   cluster_name = var.cluster_name
   cluster_endpoint = module.cluster.external_v4_endpoint
-}
-
-resource "kubernetes_namespace" "aznamespace" {
-  metadata {
-    name = "aznamespace"
-  }
-  #depends_on = [module.cluster.node_group_ids]
-}
-
-resource "kubernetes_namespace" "stage" {
-  metadata {
-    name = "stage"
-  }
-}
-
-resource "kubernetes_namespace" "prod" {
-  metadata {
-    name = "prod"
-  }
 }
 
 
