@@ -1,7 +1,7 @@
 # Разворачивание инфраструктуры
 
 ### terraform - разворачивание необходимой инфраструктуры в YC
-- на текущий момент разворачивается k8s, ingress, prometheus, grafana, alertmanager, jenkins.
+- на текущий момент разворачивается k8s, ingress, prometheus, grafana, alertmanager, elk, jenkins.
 - jenkins-у заливается kubeconfig полученный от модуля admins (install.sh provisioner для jenkins) в момент применения terraform-а
 - jenkins целенаправленно разворачивается как отдельный host (jenkins в k8s - тонкости docker in docker - пока в процессе изучения)
 - На текущий момент при запуске jenkins - следовать его инструкциям по донастройке + надо поставить docker-pipelines, Pipeline Utility Steps плагины и прописать кред на докер-хаб c id=dockerhub_id
