@@ -15,6 +15,10 @@ jobs:
         run: |-
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
 
+      - name: install yc
+        run: |-
+          cat /home/runner/.bashrc | grep yc
+
       - name: add yc
         run: |-
           source "/home/runner/.bashrc"
