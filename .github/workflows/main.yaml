@@ -14,7 +14,14 @@ jobs:
       - name: install yc
         run: |-
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+
+      - name: add yc
+        run: |-
           source "/home/runner/.bashrc"
+
+      - name: check yc
+        run: |-
+          yc --version
 
       - name: setup terraform
         uses: hashicorp/setup-terraform@v1
